@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="color-scheme" content="dark light">
+</head>
+<body>
+	<h1>Vs. Link Monitor</h1>
+	<div id="controls">
+		<div>
+			<input id="path" type="text" value="/vs/info">
+			<label for="path">Path</label>
+		</div>
+		<div>
+			<input id="frequency" type="number" min="1" value="2">
+			<label for="frequency">Seconds between requests</label>
+		</div>
+	</div>
+	<h4>Request number: <span id="request-count"></span></h4>
+	<h3>Status: <span id="status"></span></h3>
+	<pre id="response">
+	</pre>
+</body>
+</html>
+<script>
+var counter = 9999;
+var requestCount = 0;
+function doRequest() {
+	fetch("http://localhost:31123" + document.getElementById("path").value)
+		.then(async function(response) {
+			requestCount++;
+			document.getElementById("request-count").innerHTML = "" + requestCount;
+			document.getElementById("status").innerHTML = response.status + " " + response.statusText;
+			try {
+				var j = await response.json();
+				document.getElementById("response").innerHTML = prettyJson(j);
+			} catch(e) {
+				document.getElementById("response").innerHTML = "";
+			}
+		});
+}
+function prettyJson(j, indentation = 0) {
+	var ret = ""
+	var spaces = "";
+	for (var i = 0; i < indentation; i++) {
+		spaces += "  ";
+	}
+	if (typeof(j) == "object") {
+		if (Array.isArray(j)) {
+			ret += "[\n";
+			ret += j
+				.map(v => spaces + "  " + prettyJson(v, indentation + 1))
+				.join(",\n");
+			ret += "\n";
+			ret += spaces + "]";
+		} else {
+			ret += "{\n";
+			ret += Object.entries(j)
+				.map(e => spaces + "  \"" + e[0]  + "\": " + prettyJson(e[1], indentation + 1))
+				.join(",\n");
+			ret += "\n";
+			if (ret.length > 1) {
+
+			}
+			ret += spaces + "}";
+		}
+	} else {
+		if (typeof j == "string") {
+			ret += "\"" + j + "\"";
+		} else {
+			ret += j;
+		}
+	}
+	return ret;
+}
+setInterval(() => {
+	counter++;
+	if (counter > parseInt(document.getElementById("frequency").value)) {
+		counter = 0;
+		doRequest();
+	}
+}, 1000);
+doRequest();
+</script>

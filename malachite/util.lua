@@ -5,7 +5,7 @@ function Stack:new()
 	local o = {
 	}
 	Malachite:apply(Stack, o)
-    return o;
+	return o;
 end
 
 function Stack:push(value)
@@ -31,6 +31,14 @@ function Malachite:log(...)
 		out = out .. Malachite:toString(select(i, ...))
 	end
 	console:log(out)
+end
+
+function Malachite:error(...)
+	local out = ""
+	for i = 1, select("#", ...) do
+		out = out .. Malachite:toString(select(i, ...))
+	end
+	console:error(out)
 end
 
 function Malachite:copy(src)

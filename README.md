@@ -19,6 +19,10 @@ Common existing or hypothetical use cases that would interact with Vs. Link:
 ### Project structure
 **Vs. Link** code is stored under the `src` directory. This contains all the code for interacting with Pokemon games and parsing that data.
 
-**Malachite**, an emulator Lua library written for Vs. Link, is located under `malachite`, to potentially be eventually broken out as its own project. Malachite handles standard utilities and types, and exposes useful, simpler APIs for things like networking (HTTP servers in specific), serialization, and some as of yet unused graphics APIs.
+**Malachite**, an emulator Lua library written for Vs. Link, is located under `malachite`, to potentially be eventually broken out as its own project.
+Malachite handles standard utilities and types, and exposes useful, simpler APIs for things like networking (HTTP servers in specific), serialization, and some as of yet unused graphics APIs.
 
 Malachite is much more strict with symbol polution and general API design principles. Vs. Link is a little more slapdash. Both codebases are early in development and likely to be volatile.
+
+Examples for integration with Vs. Link are under `example`.
+Current implementations are in JavaScript running in local HTML webpages.
